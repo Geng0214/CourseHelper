@@ -1,0 +1,34 @@
+name: Publish extension ZIP
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+env:
+  COURSE_HELPER_UPDATE_URL: ${{ vars.COURSE_HELPER_UPDATE_URL }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Ensure the tag matches the manifest version
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: node --input-type=module -e "import fs from 'node:fs'; const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf8')); if (process.env.RELEASE_TAG !== 'v' + manifest.version) throw new Error('Tag must match manifest.json version');"
+      - run: npm run verify
+      - name: Check committed browser build
+        run: git diff --exit-code -- extension userscript
+      - name: Create GitHub release and upload the installable ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: gh release create "$RELEASE_TAG" dist/course-helper-v*.zip dist/course-helper.user.js --verify-tag --generate-notes --title "Course Helper $RELEASE_TAG"

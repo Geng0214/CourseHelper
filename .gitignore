@@ -1,0 +1,16 @@
+node_modules/
+dist/
+*.zip
+.build-*/
+coverage/
+playwright-report/
+test-results/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db
+
+# AI 助手本地工作目录
+.workbuddy-ai/

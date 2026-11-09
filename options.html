@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>课程助手 · API 设置</title>
+  <style>
+    :root { color-scheme:light; --ink:#172336; --muted:#52657d; --blue:#2459c2; --border:#c5d1e0; }
+    * { box-sizing:border-box; } body { margin:0; color:var(--ink); background:#f3f6fb; font:15px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    main { max-width:660px; margin:48px auto; padding:0 20px; } .eyebrow { margin:0 0 6px; font-size:13px; color:var(--blue); font-weight:600; }
+    h1 { margin:0; font-size:28px; line-height:1.3; letter-spacing:-.025em; } .intro { margin:12px 0 24px; color:var(--muted); }
+    form { background:white; padding:24px; border:1px solid #dce4ef; border-radius:14px; } .field { margin:0 0 20px; }
+    label { display:block; font-weight:600; margin-bottom:6px; } input[type=url],input[type=text],input[type=password] { width:100%; min-height:46px; border:1px solid var(--border); border-radius:8px; padding:10px 12px; background:white; color:var(--ink); font:inherit; }
+    input::placeholder { color:#6b7a8e; } .help { margin:6px 0 0; font-size:13px; color:var(--muted); }
+    .key-row { display:flex; gap:8px; } .key-row input { flex:1; min-width:0; } .key-row button { min-width:64px; }
+    button { min-height:44px; padding:9px 14px; border:1px solid var(--border); border-radius:8px; background:white; color:var(--ink); font:inherit; cursor:pointer; }
+    button:hover:not(:disabled) { background:#edf3fd; } button:disabled { opacity:.5; cursor:default; } .primary { background:var(--blue); color:white; border-color:var(--blue); } .primary:hover:not(:disabled) { background:#174ba9; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:22px; } .check { display:flex; align-items:flex-start; gap:10px; font-weight:400; }
+    .presets { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; } .presets button { min-height:38px; padding:6px 12px; font-size:13px; }
+    input[type=checkbox] { margin:5px 0 0; width:18px; height:18px; accent-color:var(--blue); flex:none; }
+    .notice { padding:12px; border-radius:8px; background:#f3f6fb; color:var(--muted); font-size:13px; margin-top:20px; }
+    #status { min-height:28px; margin:14px 0 0; overflow-wrap:anywhere; } #status[data-kind=error] { color:#b42318; } #status[data-kind=success] { color:#17634a; }
+    .steps { color:var(--muted); margin:20px 0 0; font-size:13px; } .steps strong { color:var(--ink); }
+    :focus-visible { outline:3px solid #8cb5ff; outline-offset:2px; } [hidden] { display:none!important; }
+    @media(max-width:480px) { main { margin:24px auto; padding:0 12px; } form { padding:18px; } h1 { font-size:24px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">COURSE HELPER</p>
+    <h1>配好一次，在课程页直接使用</h1>
+    <p class="intro">视频倍速无需配置。使用 AI 做题时，填入你自己的兼容 API，保存后返回课程页，点击“AI 做本页题”。</p>
+    <form id="settingsForm" novalidate>
+      <div class="presets" aria-label="快速填写 API 地址"><button type="button" data-preset="https://api.deepseek.com/chat/completions">DeepSeek</button><button type="button" data-preset="https://api.openai.com/v1">OpenAI</button><button type="button" data-preset="http://localhost:11434/v1">本机服务</button></div>
+      <div class="field">
+        <label for="baseUrl">API 地址</label>
+        <input id="baseUrl" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://你的服务地址/v1" required aria-describedby="urlHelp">
+        <p class="help" id="urlHelp">支持 OpenAI 兼容的 Chat Completions 接口，可填写基础地址或完整的 /chat/completions 地址。</p>
+      </div>
+      <div class="field">
+        <label for="apiKey">API Key</label>
+        <div class="key-row"><input id="apiKey" type="password" autocomplete="off" spellcheck="false" placeholder="粘贴你的 API Key" aria-describedby="keyHelp"><button id="showKey" type="button" aria-pressed="false">显示</button></div>
+        <p class="help" id="keyHelp">仅保存在当前浏览器，不同步到云端。不要分享密钥或包含密钥的截图。本地无密钥服务可留空。</p>
+      </div>
+      <div class="field">
+        <label for="model">模型名称</label>
+        <input id="model" type="text" autocomplete="off" spellcheck="false" placeholder="填写服务商提供的模型 ID" required aria-describedby="modelHelp">
+        <p class="help" id="modelHelp">按服务商控制台填写，名称必须与接口支持的模型一致。</p>
+      </div>
+      <label class="check"><input id="autoFill" type="checkbox" checked><span>生成答案后自动填写到本页题目<br><span class="help">关闭后只显示答案与解析。</span></span></label>
+      <label class="check" style="margin-top:12px"><input id="autoSubmit" type="checkbox" checked><span>填写完成后自动提交<br><span class="help">全部题目识别、填写成功才提交；缺题或页面变化时停止。关闭后由你检查并提交。</span></span></label>
+      <p class="notice">点击“AI 做本页题”会将本页题干与选项发送到你配置的服务；“测试连接”也会发起一次小请求，可能产生 API 费用。保存时浏览器会请求连接该 API 域名的权限。</p>
+      <div class="actions"><button id="saveButton" class="primary" type="submit">保存设置</button><button id="testButton" type="button">保存并测试连接</button></div>
+      <p id="status" role="status" aria-live="polite">正在读取设置…</p>
+    </form>
+    <p class="steps"><strong>接下来：</strong>返回学习通或雨课堂，刷新一次课程页。右下角“课程助手”可以直接控制倍速和做题，不必反复打开浏览器扩展菜单。</p>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>

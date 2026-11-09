@@ -1,0 +1,39 @@
+name: Verify extension
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  COURSE_HELPER_UPDATE_URL: ${{ vars.COURSE_HELPER_UPDATE_URL }}
+
+jobs:
+  verify:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: ['22', '24']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+      - name: Check committed browser build
+        run: git diff --exit-code -- extension userscript
+      - uses: actions/upload-artifact@v7
+        if: matrix.os == 'ubuntu-latest' && matrix.node == '24'
+        with:
+          name: course-helper-extension
+          path: |
+            dist/course-helper-v*.zip
+            dist/course-helper.user.js
+          if-no-files-found: error
