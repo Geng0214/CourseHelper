@@ -24,7 +24,7 @@ AI 答题首次使用时打开面板中的 API 设置，填写自己服务的兼
 
 构建命令生成 `userscript/course-helper.user.js`（随源码提交）和 `dist/course-helper.user.js`（Release 附件）。先将文件发布到自己的仓库，再把仓库中脚本的 **Raw 链接**或 Release 附件链接放在 README 的“安装脚本”按钮上。网页链接必须返回 JavaScript 脚本文件，而不是 GitHub 的 HTML 文件预览页。
 
-需要自动更新时，在构建时将环境变量 `COURSE_HELPER_UPDATE_URL` 设置为你自己稳定、公开且以 `.user.js` 结尾的 HTTPS 地址。构建器会写入 `@downloadURL` 与 `@updateURL`。未设置时不会写入虚假的仓库地址，用户可重新打开同一安装链接更新。发布新版本时必须提高 manifest 版本号。
+构建器会自动写入 `@downloadURL` 与 `@updateURL`：默认按 `package.json` 的 `repository` 字段推导出 `<owner>/<repo>` 在 `main` 分支上的 Raw 地址，因此仓库建好即具备自动更新能力，无需额外配置。若改用其他托管地址（自定义域名、CDN 或非 `main` 分支），在构建时设置环境变量 `COURSE_HELPER_UPDATE_URL` 覆盖默认值；它必须是稳定、公开且以 `.user.js` 结尾的 HTTPS 地址。发布新版本时必须提高 manifest 版本号，脚本管理器才会把新文件判定为更高版本。
 
 例如仓库确定后，可使用 GitHub 的固定分支 Raw 地址；不要把仓库模板中的用户名占位符当作真实链接。
 

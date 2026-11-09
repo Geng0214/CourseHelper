@@ -31,7 +31,7 @@ npm run package:source
 
 地址应返回脚本文件，而非 GitHub HTML 预览页。Release 附件若仅触发下载，保留管理器导入说明。不要宣传为无需任何浏览器授权。
 
-需自动更新时，在本地构建环境设置 `COURSE_HELPER_UPDATE_URL` 为自己稳定、公开、以 `.user.js` 结尾的 HTTPS 地址。同时在 GitHub 仓库的 Settings → Secrets and variables → Actions → Variables 添加同名变量，值与本地一致；两个工作流已经读取它。构建器写入 `@downloadURL` / `@updateURL`；重新构建并提交生成文件，保证 CI 产物一致。未配置时不填虚假地址，用户可重新打开安装链接更新。详见 [脚本安装指南](INSTALL_USERSCRIPT.md)。
+自动更新地址默认由 `package.json` 的 `repository` 字段推导（`main` 分支上的 Raw 地址），仓库建好即可用，不必在 GitHub 配置变量。只有改用自定义托管地址时，才需要设置环境变量 `COURSE_HELPER_UPDATE_URL` 覆盖它。两种方式都要重新构建并提交生成文件，保证 CI 产物一致。发布新版本时提高 manifest 版本号。详见 [脚本安装指南](INSTALL_USERSCRIPT.md)。
 
 ## Release
 
