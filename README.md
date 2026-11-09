@@ -76,4 +76,12 @@ node scripts/preview.mjs # 本机浏览器测试页，无需账号或真实 API
 
 `dist/course-helper-source-v0.3.0.zip` 是干净源码归档。解压后提交里面的文件，不要只上传 ZIP 代替源码。不要上传密钥、个人截图、浏览器资料或 `node_modules/`。
 
-作者配置脚本稳定 Raw 地址后可简化更新；扩展版也可后续送审 Edge 商店。详见 [发布指南](docs/PUBLISHING.md)。这些文件不代表已上传 GitHub 或审核通过；开源许可证仍由作者选定并添加 `LICENSE`。
+作者配置脚本稳定 Raw 地址后可简化更新；扩展版也可后续送审 Edge 商店。详见 [发布指南](docs/PUBLISHING.md)。这些文件不代表已通过 Edge 商店审核。
+
+## 许可证
+
+Copyright (C) 2026 Geng0214
+
+本项目以 [GNU General Public License v3.0](LICENSE)（GPL-3.0）发布，许可证全文见 `LICENSE`。
+
+你可以自由地使用、修改和分发本项目，包括商业使用；但分发本项目或其衍生作品时，必须以 GPL-3.0 同样授权、公开对应源码，并保留原始版权声明。本项目按“现状”提供，不附带任何明示或暗示的担保。
